@@ -16,10 +16,7 @@ GLOBAL={
     "LogLevel": "DEBUG",
     #应用程序写日志级别，目前有DEBUG，INFO，WARNING，ERROR，CRITICAL
 
-    "ACL": ("Team.Front", ),
-    #Access control list, 访问控制列表，限定只有ACL定义中的应用可以访问API资源。
-
-    "put2Redis": True
+    "put2Redis": False
     #将应用注册到信息中心。
 
 }
@@ -27,7 +24,7 @@ GLOBAL={
 #生产环境配置段
 PRODUCT={
 
-    "ProcessName": "Team.Api",
+    "ProcessName": "Api",
     #Custom process, you can see it with "ps aux|grep ProcessName".
 
     "ProductType": "tornado",
@@ -36,7 +33,7 @@ PRODUCT={
 
 #数据库配置段
 MYSQL={
-    "Host": "101.200.125.9",
+    "Host": "127.0.0.1",
     "Port": 3306,
     "Database": "team",
     "User": "root",
