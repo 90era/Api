@@ -1,0 +1,8 @@
+Flask
+Flask-RESTful
+MySQL-python
+torndb
+setproctitle
+tornado==4.3
+#uWSGI==2.0.13.1
+#gevent==1.0.2
