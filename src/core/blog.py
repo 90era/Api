@@ -42,7 +42,7 @@ class Blog(Resource):
             #Original reproduced translation
 
         if get_index_only:
-            sql = "SELECT id,title,create_time FROM team.blog ORDER BY id %s %s" %(sort, LIMIT)
+            sql = "SELECT id,title,create_time,update_time FROM team.blog ORDER BY id %s %s" %(sort, LIMIT)
             logger.info("SELECT title only SQL: %s" %sql)
             try:
                 data = mysql2().query(sql)
@@ -98,7 +98,7 @@ class Blog(Resource):
             return res
 
         if get_catalog_data:
-            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources FROM team.blog WHERE catalog='%s' ORDER BY id %s %s" %(get_catalog_data, sort, LIMIT)
+            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources,author FROM team.blog WHERE catalog='%s' ORDER BY id %s %s" %(get_catalog_data, sort, LIMIT)
             logger.info("SELECT catalog data SQL: %s" %sql)
             try:
                 data = mysql2().query(sql)
@@ -112,7 +112,7 @@ class Blog(Resource):
             return res
 
         if get_sources_data:
-            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources FROM team.blog WHERE sources='%s' ORDER BY id %s %s" %(get_sources_data, sort, LIMIT)
+            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources,author FROM team.blog WHERE sources='%s' ORDER BY id %s %s" %(get_sources_data, sort, LIMIT)
             logger.info("SELECT sources data SQL: %s" %sql)
             try:
                 data = mysql2().query(sql)
@@ -139,9 +139,9 @@ class Blog(Resource):
             return res
 
         if blogId:
-            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources FROM team.blog WHERE id=%s" %blogId
+            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources,author FROM team.blog WHERE id=%s" %blogId
         elif num:
-            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources FROM team.blog ORDER BY id %s %s" %(sort, LIMIT)
+            sql = "SELECT id,title,content,create_time,update_time,tag,catalog,sources,author FROM team.blog ORDER BY id %s %s" %(sort, LIMIT)
         else:
             res.update(msg="The query error", code=5)
             logger.info(res)
