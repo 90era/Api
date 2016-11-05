@@ -6,7 +6,6 @@ from flask.ext.restful import Resource
 
 class Blog(Resource):
 
-    @classmethod
     def get(self):
         """/blog资源，参数是
         1.num|limit(int, str), 限制列出数据数量，另外可设置为all，列出所有blog， 全局参数。
@@ -159,27 +158,15 @@ class Blog(Resource):
         logger.info(res)
         return res
 
-    @classmethod
     def post(self):
-        """ 创建博客文章接口:
-        :: 1. 验证头部信息
-        :: 2. 验证cookie信息
-        """
-        AppRequestId     = request.headers.get("AppRequestId")
-        AppRequestName   = request.headers.get("AppRequestName")
-
-        logger.debug(request.cookies)
-
-        AppRequestCookieUsername = request.cookies.get("username", "")
-        AppRequestCookiePassword = '' # g.redis.get(Ukey + AppRequestCookieUsername) or ""
-        AppRequestCookieSignin   = True #if md5(AppRequestCookieUsername + base64.decodestring(AppRequestCookiePassword)) else False
+        """ 创建博客文章接口 """
         #get blog form informations.
         blog_title   = request.form.get('title')
         blog_content = request.form.get('content')
         blog_ctime   = today()
         blog_tag     = request.form.get("tag")
-        blog_catalog = request.form.get("catalog")
-        blog_sources = request.form.get("sources")
+        blog_catalog = request.form.get("catalog", "linux")
+        blog_sources = request.form.get("sources", "原创")
         blog_author  = request.form.get("author")
         logger.info("blog_title:%s, blog_content:%s, blog_ctime:%s, blog_tag:%s, blog_catalog:%s, blog_sources:%s, blog_author:%s" %(blog_title, blog_content, blog_ctime, blog_tag, blog_catalog, blog_sources, blog_author))
         if blog_title and blog_content and blog_ctime and blog_author:
@@ -197,3 +184,35 @@ class Blog(Resource):
             res = {"code": 4, "data": None, "msg": "data form error."}
         logger.info(res)
         return res
+
+    def put(self):
+        """ 更新博客文章接口 """
+        blog_title   = request.form.get('title')
+        blog_content = request.form.get('content')
+        blog_utime   = today()
+        blog_tag     = request.form.get("tag")
+        blog_catalog = request.form.get("catalog", "linux")
+        blog_sources = request.form.get("sources", "原创")
+        blog_author  = request.form.get("author")
+        blog_blogId  = request.form.get("blogId")
+        logger.info("Update blog, blog_title:%s, blog_content:%s, blog_utime:%s, blog_tag:%s, blog_catalog:%s, blog_sources:%s, blog_author:%s, blog_blogId:%s" %(blog_title, blog_content, blog_utime, blog_tag, blog_catalog, blog_sources, blog_author, blog_blogId))
+        try:
+            blog_blogId = int(blog_blogId)
+        except ValueError,e:
+            logger.error(e, exc_info=True)
+            res = {"code": 5, "msg": "blog form error."}
+        else:
+            if blog_title and blog_content and blog_utime and blog_author:
+                sql = "UPDATE blog SET title=%s,content=%s,update_time=%s,tag=%s,catalog=%s,sources=%s,author=%s WHERE id=%s"
+                try:
+                    mysql2().update(sql, blog_title, blog_content, blog_utime, blog_tag, blog_catalog, blog_sources, blog_author, blog_blogId)
+                except Exception,e:
+                    logger.error(e, exc_info=True)
+                    res = {"code": 6, "msg": "blog write error."}
+                else:
+                    res = {"code": 0, "success": True, "msg": None}
+            else:
+                res = {"code": 7, "success": False, "msg": "blog form error."}
+        logger.info(res)
+        return res
+
