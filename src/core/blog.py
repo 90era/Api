@@ -68,12 +68,14 @@ class Blog(Resource):
             return res
 
         if get_catalog_list:
-            sql = "SELECT GROUP_CONCAT(catalog) FROM blog GROUP BY catalog"
+            #sql = "SELECT GROUP_CONCAT(catalog) FROM blog GROUP BY catalog"
+            sql = 'select catalog from blog'
             logger.info("SELECT catalog list SQL: %s" %sql)
             try:
                 data = mysql.get(sql)
                 logger.info(data)
-                data = [ v.split(",")[0] for i in data for v in i.values() if v and v.split(",")[0] ]
+                data = list(set([ v for _ in data for v in _.values() if v ]))
+                #data = [ v.split(",")[0] for i in data for v in i.values() if v and v.split(",")[0] ]
             except Exception,e:
                 logger.error(e, exc_info=True)
                 res.update(data=[], msg="Catalog query fail", code=1)
@@ -83,12 +85,14 @@ class Blog(Resource):
             return res
 
         if get_sources_list:
-            sql = "SELECT GROUP_CONCAT(sources) FROM blog GROUP BY sources"
+            #sql = "SELECT GROUP_CONCAT(sources) FROM blog GROUP BY sources"
+            sql = 'select sources from blog'
             logger.info("SELECT sources list SQL: %s" %sql)
             try:
                 data = mysql.get(sql)
                 logger.info(data)
-                data = [ v.split(",")[0] for i in data for v in i.values() if v and v.split(",")[0] ]
+                #data = [ v.split(",")[0] for i in data for v in i.values() if v and v.split(",")[0] ]
+                data = list(set([ v for _ in data for v in _.values() if v ]))
             except Exception,e:
                 logger.error(e, exc_info=True)
                 res.update(data=[], msg="Sources query fail", code=2)

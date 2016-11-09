@@ -46,7 +46,9 @@ class DB():
 
 if __name__ == "__main__":
     mysql=DB()
-    sql = "SELECT username,password FROM user WHERE username='admin'"
+    #sql = "SELECT username,password FROM user WHERE username='admin'"
+    sql = "select id,title,create_time,update_time,tag,catalog,sources,author from blog where id=95;"
+    sql = "select id,sources from blog where sources='原创'"
     print mysql.get(sql)
-    print mysql.query(sql)
+    #print mysql.query(sql)
     #print [ v.split(",")[0] for i in data for v in i.values() if v ]
